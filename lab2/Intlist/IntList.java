@@ -29,7 +29,7 @@ public class IntList {
      * A List with null rest, and first = 0.
      */
     public IntList() {
-    /* NOTE: public IntList () { }  would also work. */
+        /* NOTE: public IntList () { }  would also work. */
         this(0, null);
     }
 
@@ -82,7 +82,14 @@ public class IntList {
 
     public static IntList dcatenate(IntList A, IntList B) {
         //TODO:  fill in method
-        return null;
+        IntList p = A;
+        while(p.rest != null)
+        {
+            p =p.rest;
+        }
+        p.rest = B;
+        B = null;
+        return A;
     }
 
     /**
@@ -91,8 +98,21 @@ public class IntList {
      */
     public static IntList catenate(IntList A, IntList B) {
         //TODO:  fill in method
-        return null;
+        IntList c = new IntList(A.first, null);
+        IntList p = c;
+        while (true) {
+            A = A.rest;
+            p.rest = new IntList(A.first, null);
+            p = p.rest;
+            if (A.rest == null) {
+                break;
+            }
+        }
+        p.rest = B;
+        return c;
     }
+
+
 
 
 
