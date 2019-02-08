@@ -1,9 +1,9 @@
-public class LinkedListDeque<mytype> {
+public class LinkedListDeque<T> {
     public class Node {
         public Node prev;
         public Node next;
-        public mytype item;
-        public Node(mytype a, Node p, Node n) {
+        public T item;
+        public Node(T a, Node p, Node n) {
             prev = p;
             next = n;
             item = a;
@@ -45,18 +45,18 @@ public class LinkedListDeque<mytype> {
         size = 0;
         int i = 0;
         while(i < l.size()) {
-            addLast((mytype) l.get(i)); /* @source https://www.youtube.com/watch?v=JNroRiEG7U4 */
+            addLast((T) l.get(i)); /* @source https://www.youtube.com/watch?v=JNroRiEG7U4 */
             i++;
         }
     }
 
-    public void addFirst(mytype item) {
+    public void addFirst(T item) {
         sentinelf.next = new Node(item, sentinelf, sentinelf.next);
         sentinelf.next.next.prev = sentinelf.next;
         size = size + 1;
     }
 
-    public void addLast(mytype item) {
+    public void addLast(T item) {
         sentinell.prev = new Node(item, sentinell.prev, sentinell);
         sentinell.prev.prev.next = sentinell.prev;
         size = size + 1;
@@ -75,29 +75,29 @@ public class LinkedListDeque<mytype> {
         System.out.println();
     }
 
-    public mytype removeFirst() {
+    public T removeFirst() {
         if(isEmpty() == true) {
             return null;
         }
-        mytype item = sentinelf.next.item;
+        T item = sentinelf.next.item;
         sentinelf.next.next.prev = sentinelf;
         sentinelf.next = sentinelf.next.next;
         size --;
         return item;
     }
 
-    public mytype removeLast() {
+    public T removeLast() {
         if(isEmpty() == true) {
             return null;
         }
-        mytype item = sentinell.prev.item;
+        T item = sentinell.prev.item;
         sentinell.prev.prev.next = sentinell;
         sentinell.prev = sentinell.prev.prev;
         size --;
         return item;
     }
 
-    public mytype get(int index) {
+    public T get(int index) {
         if(index >= size()) {
             return null;
         }
@@ -109,13 +109,13 @@ public class LinkedListDeque<mytype> {
         return p.item;
     }
 
-    private mytype Recursive(int index, Node p) {
+    private T Recursive(int index, Node p) {
         if(index == 0) {
             return p.item;
         }
         return Recursive(index - 1, p.next);
     }
-    public mytype getRecursive(int index) {
+    public T getRecursive(int index) {
         if(index >= size()) {
             return null;
         }

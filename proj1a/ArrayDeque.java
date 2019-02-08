@@ -1,5 +1,5 @@
-public class ArrayDeque <mytype> {
-    private mytype[] item;
+public class ArrayDeque <T> {
+    private T[] item;
     private int size;
     private int head;
     private int tail;
@@ -8,20 +8,20 @@ public class ArrayDeque <mytype> {
     private float threshold = (float) 1 / 4;
 
     public ArrayDeque() {
-        item = (mytype[]) new Object[STARTINGSIZE];
+        item = (T[]) new Object[STARTINGSIZE];
         size = 0;
         head = -1;
         tail = 0;
     }
 
     public ArrayDeque(ArrayDeque other) {
-        item = (mytype[]) new Object[STARTINGSIZE];
+        item = (T[]) new Object[STARTINGSIZE];
         size = 0;
         head = -1;
         tail = 0;
         int index = 0;
         while (index < other.size()) {
-            this.addLast((mytype) other.get(index));
+            this.addLast((T) other.get(index));
             index ++;
         }
     }
@@ -34,7 +34,7 @@ public class ArrayDeque <mytype> {
         return size == 0;
     }
 
-    public mytype get(int index) {
+    public T get(int index) {
         if(index >= size() || index < 0) {
             return null;
         }
@@ -51,7 +51,7 @@ public class ArrayDeque <mytype> {
     }
 
     private void newarray(int s) {
-        mytype[] p = (mytype[]) new Object[s];
+        T[] p = (T[]) new Object[s];
         for(int index = 0; index < size(); index++) {
             p[index] = get(index);
         }
@@ -59,7 +59,7 @@ public class ArrayDeque <mytype> {
         tail = size();
         this.item = p;
     }
-    public void addFirst(mytype item) {
+    public void addFirst(T item) {
         if(size + 1 > this.item.length) {
             newarray(this.item.length * FACTOR);
         }
@@ -68,7 +68,7 @@ public class ArrayDeque <mytype> {
         size ++;
     }
 
-    public void addLast(mytype item) {
+    public void addLast(T item) {
         if(size + 1 > this.item.length) {
             newarray(this.item.length * FACTOR);
         }
@@ -77,11 +77,11 @@ public class ArrayDeque <mytype> {
         size ++;
     }
 
-    public mytype removeFirst() {
+    public T removeFirst() {
         if(isEmpty() == true) {
             return null;
         }
-        mytype item = get(0);
+        T item = get(0);
         this.item[(head + 1 + this.item.length) % this.item.length] = null;
         head ++;
         size --;
@@ -94,11 +94,11 @@ public class ArrayDeque <mytype> {
         return item;
     }
 
-    public mytype removeLast() {
+    public T removeLast() {
         if(isEmpty() == true) {
             return null;
         }
-        mytype item = get(size() - 1);
+        T item = get(size() - 1);
         this.item[(tail - 1 + this.item.length) % this.item.length] = null;
         tail --;
         size --;
