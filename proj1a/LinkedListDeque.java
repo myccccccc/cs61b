@@ -1,8 +1,8 @@
 public class LinkedListDeque<T> {
     public class Node {
-        public Node prev;
-        public Node next;
-        public T item;
+        private Node prev;
+        private Node next;
+        private T item;
         public Node(T a, Node p, Node n) {
             prev = p;
             next = n;
@@ -21,7 +21,7 @@ public class LinkedListDeque<T> {
     private int size;
 
     public boolean isEmpty() {
-        if(size == 0) {
+        if (size == 0) {
             return true;
         }
         else {
@@ -44,7 +44,7 @@ public class LinkedListDeque<T> {
         sentinell.prev = sentinelf;
         size = 0;
         int i = 0;
-        while(i < l.size()) {
+        while (i < l.size()) {
             addLast((T) l.get(i)); /* @source https://www.youtube.com/watch?v=JNroRiEG7U4 */
             i++;
         }
@@ -76,29 +76,29 @@ public class LinkedListDeque<T> {
     }
 
     public T removeFirst() {
-        if(isEmpty() == true) {
+        if (isEmpty() == true) {
             return null;
         }
         T item = sentinelf.next.item;
         sentinelf.next.next.prev = sentinelf;
         sentinelf.next = sentinelf.next.next;
-        size --;
+        size--;
         return item;
     }
 
     public T removeLast() {
-        if(isEmpty() == true) {
+        if (isEmpty() == true) {
             return null;
         }
         T item = sentinell.prev.item;
         sentinell.prev.prev.next = sentinell;
         sentinell.prev = sentinell.prev.prev;
-        size --;
+        size--;
         return item;
     }
 
     public T get(int index) {
-        if(index >= size()) {
+        if (index >= size()) {
             return null;
         }
         Node p = sentinelf.next;
@@ -110,13 +110,13 @@ public class LinkedListDeque<T> {
     }
 
     private T Recursive(int index, Node p) {
-        if(index == 0) {
+        if (index == 0) {
             return p.item;
         }
         return Recursive(index - 1, p.next);
     }
     public T getRecursive(int index) {
-        if(index >= size()) {
+        if (index >= size()) {
             return null;
         }
         return Recursive(index, sentinelf.next);
