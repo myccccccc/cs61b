@@ -1,4 +1,4 @@
-public class ArrayDeque <T> {
+public class ArrayDeque<T> {
     private T[] item;
     private int size;
     private int head;
@@ -41,7 +41,7 @@ public class ArrayDeque <T> {
     }
 
     public T get(int index) {
-        if (index >= size() || index<0) {
+        if (index >= size() || index < 0) {
             return null;
         }
         return item[getPositive(index + head + 1) % this.item.length];
@@ -65,56 +65,56 @@ public class ArrayDeque <T> {
         tail = size();
         this.item = p;
     }
-    public void addFirst(T item) {
+    public void addFirst(T i) {
         if (size + 1 > this.item.length) {
             newarray(this.item.length * FACTOR);
         }
-        this.item[getPositive(head) % this.item.length] = item;
+        this.item[getPositive(head) % this.item.length] = i;
         head--;
         size++;
     }
 
-    public void addLast(T item) {
+    public void addLast(T i) {
         if (size + 1 > this.item.length) {
             newarray(this.item.length * FACTOR);
         }
-        this.item[getPositive(tail) % this.item.length] = item;
+        this.item[getPositive(tail) % this.item.length] = i;
         tail++;
         size++;
     }
 
     public T removeFirst() {
-        if (isEmpty() == true) {
+        if (isEmpty()) {
             return null;
         }
-        T item = get(0);
+        T i = get(0);
         this.item[getPositive(head + 1) % this.item.length] = null;
         head++;
         size--;
-        if ((float)size() / this.item.length<threshold) {
-            if (this.item.length == STARTINGSIZE ) {
-                return item;
+        if ((float) size() / this.item.length < threshold) {
+            if (this.item.length == STARTINGSIZE) {
+                return i;
             }
             newarray(this.item.length / FACTOR);
         }
-        return item;
+        return i;
     }
 
     public T removeLast() {
-        if (isEmpty() == true) {
+        if (isEmpty()) {
             return null;
         }
-        T item = get(size() - 1);
+        T i = get(size() - 1);
         this.item[getPositive(tail - 1) % this.item.length] = null;
         tail--;
         size--;
-        if ((float)size() / this.item.length<threshold) {
-            if (this.item.length == STARTINGSIZE ) {
-                return item;
+        if ((float) size() / this.item.length < threshold) {
+            if (this.item.length == STARTINGSIZE) {
+                return i;
             }
             newarray(this.item.length / FACTOR);
         }
-        return item;
+        return i;
     }
 
 
