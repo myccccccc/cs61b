@@ -37,7 +37,7 @@ public class LinkedListDeque<mytype> {
         size = 0;
     }
 
-    public LinkedListDeque( LinkedListDeque<mytype> l) {
+    public LinkedListDeque( LinkedListDeque l) {
         sentinelf = new Node();
         sentinell = new Node();
         sentinelf.next = sentinell;
@@ -45,9 +45,8 @@ public class LinkedListDeque<mytype> {
         size = 0;
         int i = 0;
         while(i < l.size()) {
-            addLast(l.get(i));
+            addLast((mytype) l.get(i)); /* @source https://www.youtube.com/watch?v=JNroRiEG7U4 */
             i++;
-            size++;
         }
     }
 
