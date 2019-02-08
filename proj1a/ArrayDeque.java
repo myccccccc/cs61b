@@ -25,6 +25,12 @@ public class ArrayDeque <T> {
             index++;
         }
     }
+    private int getPositive(int a) {
+        while (a < 0) {
+            a = a + this.item.length;
+        }
+        return a;
+    }
 
     public int size() {
         return size;
@@ -38,12 +44,12 @@ public class ArrayDeque <T> {
         if (index >= size() || index<0) {
             return null;
         }
-        return item[(index + head + 1 + this.item.length) % this.item.length];
+        return item[getPositive(index + head + 1) % this.item.length];
     }
 
     public void printDeque() {
         int index = 0;
-        while (index<size()) {
+        while (index < size()) {
             System.out.println(get(index) + " ");
             index++;
         }
@@ -52,7 +58,7 @@ public class ArrayDeque <T> {
 
     private void newarray(int s) {
         T[] p = (T[]) new Object[s];
-        for (int index = 0; index<size(); index++) {
+        for (int index = 0; index < size(); index++) {
             p[index] = get(index);
         }
         head = -1;
@@ -63,7 +69,7 @@ public class ArrayDeque <T> {
         if (size + 1 > this.item.length) {
             newarray(this.item.length * FACTOR);
         }
-        this.item[(this.item.length + head) % this.item.length] = item;
+        this.item[getPositive(head) % this.item.length] = item;
         head--;
         size++;
     }
@@ -72,7 +78,7 @@ public class ArrayDeque <T> {
         if (size + 1 > this.item.length) {
             newarray(this.item.length * FACTOR);
         }
-        this.item[(this.item.length + tail) % this.item.length] = item;
+        this.item[getPositive(tail) % this.item.length] = item;
         tail++;
         size++;
     }
@@ -82,7 +88,7 @@ public class ArrayDeque <T> {
             return null;
         }
         T item = get(0);
-        this.item[(head + 1 + this.item.length) % this.item.length] = null;
+        this.item[getPositive(head + 1) % this.item.length] = null;
         head++;
         size--;
         if ((float)size() / this.item.length<threshold) {
@@ -99,7 +105,7 @@ public class ArrayDeque <T> {
             return null;
         }
         T item = get(size() - 1);
-        this.item[(tail - 1 + this.item.length) % this.item.length] = null;
+        this.item[getPositive(tail - 1) % this.item.length] = null;
         tail--;
         size--;
         if ((float)size() / this.item.length<threshold) {
@@ -110,5 +116,7 @@ public class ArrayDeque <T> {
         }
         return item;
     }
+
+
 
 }
