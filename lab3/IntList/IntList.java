@@ -81,7 +81,6 @@ public class IntList {
      */
 
     public static IntList dcatenate(IntList A, IntList B) {
-
         IntList p = A;
         if (A == null) {
             return B;
@@ -99,12 +98,72 @@ public class IntList {
      * * elements of B.  May NOT modify items of A.  Use 'new'.
      */
     public static IntList catenate(IntList A, IntList B) {
-
+      /*  IntList c = new IntList(A.first, null);
+        IntList p = c;
+        while (true) {
+            A = A.rest;
+            p.rest = new IntList(A.first, null);
+            p = p.rest;
+            if (A.rest == null) {
+                break;
+            }
+        }
+        p.rest = B;
+        return c;
+      */
         if (A == null) {
             return B;
         }
         return new IntList(A.first, catenate(A.rest, B));
     }
+
+
+    /**
+     * Destructive reverse method
+     */
+    public static IntList reverse(IntList l) {
+        if (l == null) {
+            return null;
+        }
+        IntList p = l;
+        int length = 1;
+        while (p.rest != null) {
+            p = p.rest;
+            length++;
+        }
+        int[] array = new int [length];
+        p = l;
+        int i = 0;
+        while (p != null) {
+            array[i] = p.first;
+            p = p.rest;
+            i++;
+        }
+        p = l;
+        while (p != null) {
+            p.first = array[length - 1];
+            p = p.rest;
+            length--;
+        }
+        return l;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * DO NOT MODIFY ANYTHING BELOW THIS LINE! Many of the concepts below here
@@ -226,25 +285,6 @@ public class IntList {
         }
         out.format(")");
         return out.toString();
-    }
-
-    public static IntList reverse(IntList l) {
-        if (l == null) {
-            return null;
-        }
-        IntList p = l.rest;
-        int length = 1;
-        while (p != null) {
-            p = p.rest;
-            length++;
-        }
-        p = l.rest;
-        while (length > 1) {
-            IntList.dcatenate(p, l);
-            p = p.rest;
-            l = l.rest;
-        }
-        return null;
     }
 }
 
