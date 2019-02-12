@@ -5,7 +5,8 @@ public class Palindrome {
         }
         Deque<Character> a = new ArrayDeque<>();
         for (int i = 0; i < word.length(); i++) {
-            /* @source https://stackoverflow.com/questions/11229986/get-string-character-by-index-java */
+            /* @source
+            /*https://stackoverflow.com/questions/11229986/get-string-character-by-index-java*/
             a.addLast(word.charAt(i));
         }
         return a;
