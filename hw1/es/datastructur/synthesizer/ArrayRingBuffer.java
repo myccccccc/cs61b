@@ -88,7 +88,7 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
         }
         @Override
         public boolean hasNext() {
-            return !isEmpty();
+            return index < fillCount();
         }
 
         @Override
