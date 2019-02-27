@@ -1,5 +1,8 @@
 package es.datastructur.synthesizer;
 
+import java.util.HashSet;
+import java.util.Set;
+
 //Note: This file will not compile until you complete task 1 (BoundedQueue).
 public class GuitarString {
     /** Constants. Do not change. In case you're curious, the keyword final
@@ -12,36 +15,40 @@ public class GuitarString {
 
     /* Create a guitar string of the given frequency.  */
     public GuitarString(double frequency) {
-        // TODO: Create a buffer with capacity = SR / frequency. You'll need to
-        //       cast the result of this division operation into an int. For
-        //       better accuracy, use the Math.round() function before casting.
-        //       Your buffer should be initially filled with zeros.
+        buffer = new ArrayRingBuffer<>((int) (SR / Math.round(frequency)));
+        while (!buffer.isFull()) {
+            buffer.enqueue((double) 0);
+        }
     }
 
 
     /* Pluck the guitar string by replacing the buffer with white noise. */
     public void pluck() {
-        // TODO: Dequeue everything in buffer, and replace with random numbers
-        //       between -0.5 and 0.5. You can get such a number by using:
-        //       double r = Math.random() - 0.5;
-        //
-        //       Make sure that your random numbers are different from each
-        //       other.
+        /* clear the buffer and do nothing */
+        while (!buffer.isEmpty()) {
+            buffer.dequeue();
+        }
+        Set<Double> numPutin = new HashSet<>();
+        while (numPutin.size() < buffer.capacity()) {
+            numPutin.add(Math.random() - 0.5);
+        }
+        for (Double d : numPutin) {
+            buffer.enqueue(d);
+        }
     }
 
     /* Advance the simulation one time step by performing one iteration of
      * the Karplus-Strong algorithm.
      */
     public void tic() {
-        // TODO: Dequeue the front sample and enqueue a new sample that is
-        //       the average of the two multiplied by the DECAY factor.
-        //       Do not call StdAudio.play().
+        Double a = buffer.dequeue();
+        Double b = buffer.peek();
+        buffer.enqueue((a + b) * DECAY / 2);
     }
 
     /* Return the double at the front of the buffer. */
     public double sample() {
-        // TODO: Return the correct thing.
-        return 0;
+        return buffer.peek();
     }
 }
-    // TODO: Remove all comments that say TODO when you're done.
+
