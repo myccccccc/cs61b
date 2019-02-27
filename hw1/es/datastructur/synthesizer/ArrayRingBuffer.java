@@ -82,6 +82,10 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
     }
 
     private class ArrayRingBufferIterator implements Iterator<T> {
+        private int index;
+        ArrayRingBufferIterator() {
+            index = 0;
+        }
         @Override
         public boolean hasNext() {
             return !isEmpty();
@@ -89,7 +93,8 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
 
         @Override
         public T next() {
-            return peek();
+            index++;
+            return rb[(first + index - 1) % capacity()];
         }
     }
 
