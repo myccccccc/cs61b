@@ -3,8 +3,8 @@ package hw2;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
-    private WeightedQuickUnionUF a; //the one with top [n] and bottom [n + 1] virtual site
-    private WeightedQuickUnionUF b; //the one with only one top [n] virtual site
+    private WeightedQuickUnionUF a; //the one with top [n * n] and bottom [n * n + 1] virtual site
+    private WeightedQuickUnionUF b; //the one with only one top [n * n] virtual site
     private int numberOfOpensites;
     private int[][] openSites;
     private int n;
@@ -46,11 +46,11 @@ public class Percolation {
         numberOfOpensites++;
         openSites[row][col] = 1;
         if (row == 0) {
-            a.union(index, n);
-            b.union(index, n);
+            a.union(index, n * n);
+            b.union(index, n * n);
         }
         if (row == n - 1) {
-            a.union(index, n + 1);
+            a.union(index, n * n + 1);
         }
         if (boundaryCheck2(row - 1, col)) {
             if (isOpen(row - 1, col)) {
@@ -90,7 +90,7 @@ public class Percolation {
     public boolean isFull(int row, int col) {   // is the site (row, col) full?
         boundaryCheck(row, col);
         if (isOpen(row, col)) {
-            return b.connected(xy2index(row, col), n);
+            return b.connected(xy2index(row, col), n * n);
         }
         return false;
     }
@@ -100,11 +100,10 @@ public class Percolation {
     }
 
     public boolean percolates() {   // does the system percolate?
-        return a.connected(n, n + 1);
+        return a.connected(n * n, n * n + 1);
     }
 
     public static void main(String[] args) {
         // use for unit testing (not required, but keep this here for the autograder)
-
     }
 }
