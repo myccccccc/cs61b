@@ -4,7 +4,7 @@ import java.util.List;
 
 public class OomageTestUtility {
     public static boolean haveNiceHashCodeSpread(List<Oomage> oomages, int M) {
-        /* TODO:
+        /*
          * Write a utility function that returns true if the given oomages
          * have hashCodes that would distribute them fairly evenly across
          * M buckets. To do this, convert each oomage's hashcode in the
@@ -13,12 +13,12 @@ public class OomageTestUtility {
          * Oomages and no bucket has more than N / 2.5 Oomages.
          */
         int N = oomages.size();
-        int numOomage[] = new int[M];
+        int[] numOomage = new int[M];
         for (Oomage o: oomages) {
             numOomage[(o.hashCode() & 0x7FFFFFFF) % M] += 1;
         }
         for (int i : numOomage) {
-            if(i < N / 50 || i > N / 2.5) {
+            if (i < N / 50 || i > N / 2.5) {
                 return false;
             }
         }
