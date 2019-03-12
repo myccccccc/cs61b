@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class MyHashMap<K extends Comparable<K>, V> implements Map61B<K, V>{
+public class MyHashMap<K, V> implements Map61B<K, V>{
 
     private int initialSize;
     private double loadFactor;
@@ -191,13 +191,4 @@ public class MyHashMap<K extends Comparable<K>, V> implements Map61B<K, V>{
         return keySet().iterator();
     }
 
-    public static void main(String[] ar) {
-        MyHashMap<String, Integer> b = new MyHashMap<String, Integer>();
-        for (int i = 0; i < 455; i++) {
-            b.put("hi" + i, 1);
-            //make sure put is working via containsKey and get
-
-        }
-
-    }
 }
