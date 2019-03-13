@@ -1,132 +1,57 @@
 package bearmaps;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.Collections;
 
+/** A very basic implementation of the ExtrinsicMinPQ.
+ *  Operations have very poor performance, but it's at least
+ *  correct. @author Matt Owen @since 03-11-19 */
 public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
 
-    private ArrayList<PriorityNode> pns;
-    private Map<PriorityNode, Integer> pn2index;
+    private ArrayList<PriorityNode> items;
 
     public ArrayHeapMinPQ() {
-        pns = new ArrayList<>();
-        pn2index = new HashMap<>();
+        items = new ArrayList<>();
     }
 
-    /* Adds an item with the given priority value. Throws an
-     * IllegalArgumentExceptionb if item is already present. */
     @Override
     public void add(T item, double priority) {
-        if (contains(item)) {
-            throw new IllegalArgumentException();
-        }
-        PriorityNode newNode = new PriorityNode(item, priority);
-        pns.add(newNode);
-        pn2index.put(newNode, pns.size() - 1);
-        moveUp(pns.size() - 1);
+        items.add(new PriorityNode(item, priority));
     }
 
-    /* Returns true if the PQ contains the given item. */
     @Override
     public boolean contains(T item) {
-        return pn2index.containsKey(new PriorityNode(item, 0));
+        return items.contains(new PriorityNode(item, 0));
     }
 
-    /* Returns the minimum item. Throws NoSuchElementException if the PQ is empty. */
+    /* Returns the minimum item. Also known as "min". */
     @Override
     public T getSmallest() {
-        if (pns.size() == 0) {
-            throw new NoSuchElementException();
-        }
-        return pns.get(0).getItem();
+        return Collections.min(items).getItem();
     }
 
-    /* Removes and returns the minimum item. Throws NoSuchElementException if the PQ is empty. */
+    /* Removes and returns the minimum item. Also known as "dequeue". */
     @Override
     public T removeSmallest() {
-        if (pns.size() == 0) {
-            throw new NoSuchElementException();
-        }
-        PriorityNode first = pns.get(0);
-        PriorityNode last = pns.get(pns.size() - 1);
-        pns.set(0, last);
-        pns.remove(pns.size() - 1);
-        pn2index.put(last, 0);
-        pn2index.remove(first);
-        if (pns.size() == 0) {
-            return first.getItem();
-        }
-        moveDown(0);
-        return first.getItem();
+        int minInd = indOf(getSmallest());
+        return items.remove(minInd).getItem();
     }
 
-    /* Changes the priority of the given item. Throws NoSuchElementException if the item
-     * doesn't exist. */
+    /* Changes the priority of the given item. Behavior undefined if item doesn't exist. */
     @Override
     public void changePriority(T item, double priority) {
-        Integer index = pn2index.get(new PriorityNode(item, 0));
-        if (index == null) {
-            throw new NoSuchElementException();
-        }
-        double oldpriority = pns.get(index).getPriority();
-        pns.get(index).setPriority(priority);
-        if (priority > oldpriority) {
-            moveDown(index);
-        } else if (priority < oldpriority) {
-            moveUp(index);
-        }
-        return;
-    }
-
-    private void swap(int index1, int index2) {
-        PriorityNode p1 = pns.get(index1);
-        PriorityNode p2 = pns.get(index2);
-        pns.set(index1, p2);
-        pns.set(index2, p1);
-        pn2index.put(p1, index2);
-        pn2index.put(p2, index1);
-    }
-
-    private void moveUp(int index) {
-        int parent = (index - 1) / 2;
-        if (parent < 0) {
-            return;
-        } else if (pns.get(parent).getPriority() <= pns.get(index).getPriority()) {
-            return;
-        } else {
-            swap(parent, index);
-            moveUp(parent);
-        }
-    }
-
-    private void moveDown(int index) {
-        int leftchild = index * 2 + 1;
-        int rightchild = index * 2 + 2;
-        int smallestIndex = index;
-        double smallestPriority = pns.get(index).getPriority();
-        if (leftchild < pns.size() && pns.get(leftchild).getPriority() < smallestPriority) {
-            smallestIndex = leftchild;
-            smallestPriority = pns.get(leftchild).getPriority();
-        }
-        if (rightchild < pns.size() && pns.get(rightchild).getPriority() < smallestPriority) {
-            smallestIndex = rightchild;
-            smallestPriority = pns.get(rightchild).getPriority();
-        }
-        if (smallestIndex != index) {
-            swap(smallestIndex, index);
-            moveDown(smallestIndex);
-        }
+        items.get(indOf(item)).setPriority(priority);
     }
 
     /* Returns the number of items in the PQ. */
     @Override
     public int size() {
-        return pns.size();
+        return items.size();
     }
 
-
+    private int indOf(T elem) {
+        return items.indexOf(new PriorityNode(elem, 0));
+    }
 
     private class PriorityNode implements Comparable<PriorityNode> {
         private T item;
