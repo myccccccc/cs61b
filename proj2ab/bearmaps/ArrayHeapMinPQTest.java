@@ -1,7 +1,15 @@
 package bearmaps;
 
+import edu.princeton.cs.algs4.StdRandom;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static org.junit.Assert.*;
+
 
 public class ArrayHeapMinPQTest {
 
@@ -53,6 +61,51 @@ public class ArrayHeapMinPQTest {
     }
 
 
+    @Test
+    public void rt() {
+        ArrayHeapMinPQ<Integer> a = new ArrayHeapMinPQ<>();
+        NaiveMinPQ<Integer> b = new NaiveMinPQ<>();
+        List<Integer> l = new ArrayList<>();
+        Map<Integer, Integer> m = new HashMap<>();
+        for (int i = 0; i < 10000000; i++) {
+            int action = StdRandom.uniform(2);
+            if (action == 0) {
+                int num = StdRandom.uniform(500);
+                int priority = StdRandom.uniform(100);
+                try {
+                    a.add(num, priority);
+                } catch (IllegalArgumentException e) {
+                    assertTrue(a.contains(num));
+                    continue;
+                }
+                b.add(num, priority);
+                l.add(num);
+                m.put(num, priority);
+            }
+            if (action == 1) {
+                if (l.size() == 0) {
+                    continue;
+                }
+                int num = l.get(StdRandom.uniform(l.size()));
+                while (!l.contains(num)) {
+                    num = l.get(StdRandom.uniform(l.size()));
+                }
+                int priority = StdRandom.uniform(100);
+                a.changePriority(num, priority);
+                b.changePriority(num, priority);
+                m.put(num, priority);
+            }
 
-
+        }
+        while (a.size() != 0) {
+            assertEquals(b.size(), a.size());
+            Integer bt = b.getSmallest();
+            Integer at = a.getSmallest();
+            Integer bi = b.removeSmallest();
+            Integer ai = a.removeSmallest();
+            assertEquals(bt, bi);
+            assertEquals(at, ai);
+            assertEquals(m.get(bi), m.get(ai));
+        }
+    }
 }
