@@ -74,7 +74,7 @@ public class MyTrieSet implements TrieSet61B{
         addHelper(this, key, 0);
     }
 
-    public void keysWithPrefixHelper(List<String> l, String s, MyTrieSet node) {
+    private void keysWithPrefixHelper(List<String> l, String s, MyTrieSet node) {
         if(node.isKey) {
             l.add(s);
         }
