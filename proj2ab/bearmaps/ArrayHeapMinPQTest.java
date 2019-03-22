@@ -67,11 +67,11 @@ public class ArrayHeapMinPQTest {
         NaiveMinPQ<Integer> b = new NaiveMinPQ<>();
         List<Integer> l = new ArrayList<>();
         Map<Integer, Integer> m = new HashMap<>();
-        for (int i = 0; i < 10000000; i++) {
+        for (int i = 0; i < 100000; i++) {
             int action = StdRandom.uniform(2);
             if (action == 0) {
-                int num = StdRandom.uniform(500);
-                int priority = StdRandom.uniform(100);
+                int num = StdRandom.uniform(90000);
+                int priority = StdRandom.uniform(10000);
                 try {
                     a.add(num, priority);
                 } catch (IllegalArgumentException e) {
@@ -87,9 +87,10 @@ public class ArrayHeapMinPQTest {
                     continue;
                 }
                 int num = l.get(StdRandom.uniform(l.size()));
-                while (!l.contains(num)) {
-                    num = l.get(StdRandom.uniform(l.size()));
-                }
+                //while (!l.contains(num)) {
+                //    System.out.println("hi");
+                //    num = l.get(StdRandom.uniform(l.size()));
+                //}
                 int priority = StdRandom.uniform(100);
                 a.changePriority(num, priority);
                 b.changePriority(num, priority);
@@ -108,4 +109,96 @@ public class ArrayHeapMinPQTest {
             assertEquals(m.get(bi), m.get(ai));
         }
     }
+
+    @Test
+    public void rtTime() {
+        ArrayHeapMinPQ<Integer> a = new ArrayHeapMinPQ<>();
+        //NaiveMinPQ<Integer> b = new NaiveMinPQ<>();
+        List<Integer> l = new ArrayList<>();
+        Map<Integer, Integer> m = new HashMap<>();
+        for (int i = 0; i < 100000; i++) {
+            int action = StdRandom.uniform(2);
+            if (action == 0) {
+                int num = StdRandom.uniform(90000);
+                int priority = StdRandom.uniform(10000);
+                try {
+                    a.add(num, priority);
+                } catch (IllegalArgumentException e) {
+                    assertTrue(a.contains(num));
+                    continue;
+                }
+                //b.add(num, priority);
+                l.add(num);
+                m.put(num, priority);
+            }
+            if (action == 1) {
+                if (l.size() == 0) {
+                    continue;
+                }
+                int num = l.get(StdRandom.uniform(l.size()));
+                while (!l.contains(num)) {
+                    num = l.get(StdRandom.uniform(l.size()));
+                }
+                int priority = StdRandom.uniform(100);
+                a.changePriority(num, priority);
+                //b.changePriority(num, priority);
+                m.put(num, priority);
+            }
+
+        }
+        while (a.size() != 0) {
+            //assertEquals(b.size(), a.size());
+            //Integer bt = b.getSmallest();
+            Integer at = a.getSmallest();
+            //Integer bi = b.removeSmallest();
+            Integer ai = a.removeSmallest();
+            //assertEquals(bt, bi);
+            assertEquals(at, ai);
+            //assertEquals(m.get(bi), m.get(ai));
+        }
+    }
+
+    @Test
+    public void rtTime2() {
+        //ArrayHeapMinPQ<Integer> a = new ArrayHeapMinPQ<>();
+        NaiveMinPQ<Integer> b = new NaiveMinPQ<>();
+        List<Integer> l = new ArrayList<>();
+        Map<Integer, Integer> m = new HashMap<>();
+        for (int i = 0; i < 100000; i++) {
+            int action = StdRandom.uniform(2);
+            if (action == 0) {
+                int num = StdRandom.uniform(90000);
+                int priority = StdRandom.uniform(10000);
+                if(!l.contains(num)) {
+                    b.add(num, priority);
+                }
+                l.add(num);
+                m.put(num, priority);
+            }
+            if (action == 1) {
+                if (l.size() == 0) {
+                    continue;
+                }
+                int num = l.get(StdRandom.uniform(l.size()));
+                while (!l.contains(num)) {
+                    num = l.get(StdRandom.uniform(l.size()));
+                }
+                int priority = StdRandom.uniform(100);
+                b.changePriority(num, priority);
+                m.put(num, priority);
+            }
+
+        }
+        while (b.size() != 0) {
+            //assertEquals(b.size(), a.size());
+            Integer bt = b.getSmallest();
+            //Integer at = a.getSmallest();
+            Integer bi = b.removeSmallest();
+            //Integer ai = a.removeSmallest();
+            assertEquals(bt, bi);
+            //assertEquals(at, ai);
+            //assertEquals(m.get(bi), m.get(ai));
+        }
+    }
+
 }
