@@ -169,7 +169,7 @@ public class ArrayHeapMinPQTest {
             if (action == 0) {
                 int num = StdRandom.uniform(90000);
                 int priority = StdRandom.uniform(10000);
-                if(!l.contains(num)) {
+                if (!l.contains(num)) {
                     b.add(num, priority);
                 }
                 l.add(num);
