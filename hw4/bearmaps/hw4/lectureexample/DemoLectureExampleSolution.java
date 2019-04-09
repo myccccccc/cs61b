@@ -3,6 +3,7 @@ package bearmaps.hw4.lectureexample;
 import bearmaps.hw4.LazySolver;
 import bearmaps.hw4.ShortestPathsSolver;
 import bearmaps.hw4.SolutionPrinter;
+import bearmaps.hw4.AStarSolver;
 
 /**
  * Showcases how the AStarSolver can solve the example from lecture.
@@ -34,7 +35,7 @@ public class DemoLectureExampleSolution {
         int start = 0;
         int goal = 6;
 
-        ShortestPathsSolver<Integer> solver = new LazySolver<>(wdg, start, goal, 10);
+        ShortestPathsSolver<Integer> solver = new AStarSolver<>(wdg, start, goal, 10);
         SolutionPrinter.summarizeSolution(solver, " => ");
     }
 }
