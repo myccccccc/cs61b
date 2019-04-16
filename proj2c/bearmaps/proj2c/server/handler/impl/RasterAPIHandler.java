@@ -175,6 +175,13 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         boolean b5 = isIn(ullon2, ullat2, lrlon2, lrlat2, urlon1, urlat1);
         boolean b6 = isIn(ullon2, ullat2, lrlon2, lrlat2, lllon1, lllat1);
         boolean b7 = isIn(ullon2, ullat2, lrlon2, lrlat2, lrlon1, lrlat1);
+        boolean b8 = ullon1 > ullon2 && ullon1 < urlon2 && urlon1 > ullon2 && urlon1 < urlon2;
+        boolean b9 = ullat2 < ullat1 && ullat2 > lllat1 && lllat2 < ullat1 && lllat2 > lllat1;
+        boolean b10 = ullon2 > ullon1 && ullon2 < urlon1 && urlon2 > ullon1 && urlon2 < urlon1;
+        boolean b11 = ullat1 < ullat2 && ullat1 > lllat2 && lllat1 < ullat2 && lllat1 > lllat2;
+        if(b8 && b9 || b10 && b11) {
+            return true;
+        }
         if (!b0 && !b1 && !b2 && !b3 && !b4 && !b5 && !b6 && !b7) {
             return false;
         }
