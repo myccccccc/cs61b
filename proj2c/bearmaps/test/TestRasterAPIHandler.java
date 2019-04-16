@@ -51,7 +51,7 @@ public class TestRasterAPIHandler {
         }
     }
 
-   
+
     private List<Map<String, Double>> paramsFromFile() throws Exception {
         List<String> lines = Files.readAllLines(Paths.get(PARAMS_FILE), Charset.defaultCharset());
         List<Map<String, Double>> testParams = new ArrayList<>();
