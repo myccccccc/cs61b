@@ -88,10 +88,6 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         double lrlat = requestParams.get("lrlat");
         double ullon = requestParams.get("ullon");
         double ullat = requestParams.get("ullat");
-        double lllon = ullon;
-        double lllat = lrlat;
-        double urlon = lrlon;
-        double urlat = ullat;
         if (lrlon <= ullon || ullat <= lrlat) {
             results.put("query_success", false);
             return results;
@@ -114,6 +110,22 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
             depth = 7;
         }
         results.put("depth", depth);
+        if (!isIn(ROOT_ULLON, ROOT_ULLAT, ROOT_LRLON, ROOT_LRLAT, ullon, ullat)) {
+            if(ullon < ROOT_ULLON) {
+                ullon = ROOT_ULLON;
+            }
+            if(ullat > ROOT_ULLAT) {
+                ullat = ROOT_ULLAT;
+            }
+        }
+        if (!isIn(ROOT_ULLON, ROOT_ULLAT, ROOT_LRLON, ROOT_LRLAT, lrlon, lrlat)) {
+            if(lrlon > ROOT_LRLON) {
+                lrlon = ROOT_LRLON;
+            }
+            if(lrlat < ROOT_LRLAT) {
+                lrlat = ROOT_LRLAT;
+            }
+        }
         List<String[]> l = new ArrayList<>();
         double lonPerx = (ROOT_LRLON - ROOT_ULLON) / Math.pow(2, depth);
         double latPery = (ROOT_ULLAT - ROOT_LRLAT) / Math.pow(2, depth);
@@ -121,22 +133,26 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         double raster_ul_lat = 0;
         double raster_lr_lon = 0;
         double raster_lr_lat = 0;
-        for (int y = 0; y < Math.pow(2, depth); y++) {
+        int ulx, uly, lrx, lry;
+        ulx = (int) ((ullon - ROOT_ULLON) / lonPerx);
+        uly = (int) ((ROOT_ULLAT - ullat) / latPery);
+        lrx = (int) ((lrlon - ROOT_ULLON) / lonPerx);
+        lry = (int) ((ROOT_ULLAT - lrlat) / latPery);
+        for (int y = uly; y <= lry; y++) {
             List<String> s = new ArrayList<>();
-            for (int x = 0; x < Math.pow(2, depth); x++) {
+            for (int x = ulx; x <= lrx; x++) {
                 double smallullon = ROOT_ULLON + x * lonPerx;
                 double smallullat = ROOT_ULLAT - y * latPery;
                 double smalllrlon = smallullon + lonPerx;
                 double smalllrlat = smallullat - latPery;
-                if(isIntersect(smallullon, smallullat, smalllrlon, smalllrlat, ullon, ullat, lrlon, lrlat)) {
-                    s.add("d" + depth +"_x" + x + "_y" + y + ".png");
-                    if (raster_ul_lon == 0 && raster_ul_lat == 0) {
-                        raster_ul_lon = smallullon;
-                        raster_ul_lat = smallullat;
-                    }
-                    raster_lr_lon = smalllrlon;
-                    raster_lr_lat = smalllrlat;
+
+                s.add("d" + depth +"_x" + x + "_y" + y + ".png");
+                if (raster_ul_lon == 0 && raster_ul_lat == 0) {
+                    raster_ul_lon = smallullon;
+                    raster_ul_lat = smallullat;
                 }
+                raster_lr_lon = smalllrlon;
+                raster_lr_lat = smalllrlat;
             }
             if (!s.isEmpty()) {
                 String[] news = new String[s.size()];
