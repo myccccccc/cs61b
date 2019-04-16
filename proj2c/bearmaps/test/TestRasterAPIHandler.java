@@ -51,21 +51,7 @@ public class TestRasterAPIHandler {
         }
     }
 
-    @Test
-    public void singleTest() throws Exception {
-        List<Map<String, Double>> testParams = paramsFromFile();
-        List<Map<String, Object>> expectedResults = resultsFromFile();
-        Map<String, Double> params = new HashMap<>();
-        params.put("lrlon", -122.22698232132974);
-        params.put("ullon", -122.27824510066588);
-        params.put("w", 575.8899843720034);
-        params.put("h", 448.07532994474786);
-        params.put("ullat", 37.866466081538384);
-        params.put("lrlat", 37.85776359857387);
-        Map<String, Object> actual = rasterer.processRequest(params, null);
-        checkParamsMap(null, expectedResults.get(0), actual);
-    }
-
+   
     private List<Map<String, Double>> paramsFromFile() throws Exception {
         List<String> lines = Files.readAllLines(Paths.get(PARAMS_FILE), Charset.defaultCharset());
         List<Map<String, Double>> testParams = new ArrayList<>();

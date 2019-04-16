@@ -175,34 +175,9 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
     }
 
     private boolean isIntersect(double ullon1, double ullat1, double lrlon1, double lrlat1, double ullon2, double ullat2, double lrlon2, double lrlat2) {
-        double lllon1 = ullon1;
-        double lllat1 = lrlat1;
-        double urlon1 = lrlon1;
-        double urlat1 = ullat1;
-        double lllon2 = ullon2;
-        double lllat2 = lrlat2;
-        double urlon2 = lrlon2;
-        double urlat2 = ullat2;
-        boolean b0 = isIn(ullon1, ullat1, lrlon1, lrlat1, ullon2, ullat2);
-        boolean b1 = isIn(ullon1, ullat1, lrlon1, lrlat1, urlon2, urlat2);
-        boolean b2 = isIn(ullon1, ullat1, lrlon1, lrlat1, lllon2, lllat2);
-        boolean b3 = isIn(ullon1, ullat1, lrlon1, lrlat1, lrlon2, lrlat2);
-        boolean b4 = isIn(ullon2, ullat2, lrlon2, lrlat2, ullon1, ullat1);
-        boolean b5 = isIn(ullon2, ullat2, lrlon2, lrlat2, urlon1, urlat1);
-        boolean b6 = isIn(ullon2, ullat2, lrlon2, lrlat2, lllon1, lllat1);
-        boolean b7 = isIn(ullon2, ullat2, lrlon2, lrlat2, lrlon1, lrlat1);
-        boolean b8 = ullon1 > ullon2 && ullon1 < urlon2 && urlon1 > ullon2 && urlon1 < urlon2;
-        boolean b9 = ullat2 < ullat1 && ullat2 > lllat1 && lllat2 < ullat1 && lllat2 > lllat1;
-        boolean b10 = ullon2 > ullon1 && ullon2 < urlon1 && urlon2 > ullon1 && urlon2 < urlon1;
-        boolean b11 = ullat1 < ullat2 && ullat1 > lllat2 && lllat1 < ullat2 && lllat1 > lllat2;
-        if(b8 && b9 || b10 && b11) {
-            return true;
-        }
-        if (!b0 && !b1 && !b2 && !b3 && !b4 && !b5 && !b6 && !b7) {
-            return false;
-        }
-        return true;
-
+        boolean b1 = (ullon1 < lrlon2) && (ullat1 > lrlat2);
+        boolean b2 = (lrlon1 > ullon2) && (lrlat1 < ullat2);
+        return b1 && b2;
     }
 
     private boolean isIn(double ullon, double ullat, double lrlon, double lrlat, double lon, double lat) {
