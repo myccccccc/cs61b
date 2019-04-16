@@ -27,8 +27,8 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
         point2node = new HashMap<>();
         for(Node n : nodes) {
             Point p = new Point(n.lon(), n.lat());
+            point2node.put(p, n);
             if(!neighbors(n.id()).isEmpty()) {
-                point2node.put(p, n);
                 spots.add(p);
             }
         }
