@@ -12,13 +12,10 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.Base64;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
-import static bearmaps.proj2c.utils.Constants.SEMANTIC_STREET_GRAPH;
-import static bearmaps.proj2c.utils.Constants.ROUTE_LIST;
+import static bearmaps.proj2c.utils.Constants.*;
 
 /**
  * Handles requests from the web browser for map images. These images
@@ -84,12 +81,121 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
      */
     @Override
     public Map<String, Object> processRequest(Map<String, Double> requestParams, Response response) {
-        //System.out.println("yo, wanna know the parameters given by the web browser? They are:");
-        //System.out.println(requestParams);
+        System.out.println("yo, wanna know the parameters given by the web browser? They are:");
+        System.out.println(requestParams);
         Map<String, Object> results = new HashMap<>();
-        System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
-                + "your browser.");
+        double lrlon = requestParams.get("lrlon");
+        double lrlat = requestParams.get("lrlat");
+        double ullon = requestParams.get("ullon");
+        double ullat = requestParams.get("ullat");
+        double lllon = ullon;
+        double lllat = lrlat;
+        double urlon = lrlon;
+        double urlat = ullat;
+        if (lrlon <= ullon || ullat <= lrlat) {
+            results.put("query_success", false);
+            return results;
+        }
+        if (!isIntersect(ROOT_ULLON, ROOT_ULLAT, ROOT_LRLON, ROOT_LRLAT, ullon, ullat, lrlon, lrlat)) {
+            results.put("query_success", false);
+            return results;
+        }
+        results.put("query_success", true);
+        double LonDPP = (lrlon - ullon) / requestParams.get("w");
+        int depth = 0;
+        for(double w = 256.0; depth < 8;) {
+            if (((ROOT_LRLON - ROOT_ULLON) / w) <= LonDPP) {
+                break;
+            }
+            w *= 2;
+            depth += 1;
+        }
+        if (depth == 8) {
+            depth = 7;
+        }
+        results.put("depth", depth);
+        List<String[]> l = new ArrayList<>();
+        double lonPerx = (ROOT_LRLON - ROOT_ULLON) / Math.pow(2, depth);
+        double latPery = (ROOT_ULLAT - ROOT_LRLAT) / Math.pow(2, depth);
+        double raster_ul_lon = 0;
+        double raster_ul_lat = 0;
+        double raster_lr_lon = 0;
+        double raster_lr_lat = 0;
+        for (int y = 0; y < Math.pow(2, depth); y++) {
+            List<String> s = new ArrayList<>();
+            for (int x = 0; x < Math.pow(2, depth); x++) {
+                double smallullon = ROOT_ULLON + x * lonPerx;
+                double smallullat = ROOT_ULLAT - y * latPery;
+                double smalllrlon = smallullon + lonPerx;
+                double smalllrlat = smallullat - latPery;
+                if(isIntersect(smallullon, smallullat, smalllrlon, smalllrlat, ullon, ullat, lrlon, lrlat)) {
+                    s.add("d" + depth +"_x" + x + "_y" + y + ".png");
+                    if (raster_ul_lon == 0 && raster_ul_lat == 0) {
+                        raster_ul_lon = smallullon;
+                        raster_ul_lat = smallullat;
+                    }
+                    raster_lr_lon = smalllrlon;
+                    raster_lr_lat = smalllrlat;
+                }
+            }
+            if (!s.isEmpty()) {
+                String[] news = new String[s.size()];
+                for (int i = 0; i < s.size(); i++) {
+                    news[i] = s.get(i);
+                }
+                l.add(news);
+            }
+        }
+        String[][] render_grid = new String[l.size()][];
+        for (int i = 0; i < l.size(); i++) {
+            render_grid[i] = l.get(i);
+        }
+        results.put("render_grid", render_grid);
+        results.put("raster_ul_lon", raster_ul_lon);
+        results.put("raster_ul_lat", raster_ul_lat);
+        results.put("raster_lr_lon", raster_lr_lon);
+        results.put("raster_lr_lat", raster_lr_lat);
         return results;
+    }
+
+    private boolean isIntersect(double ullon1, double ullat1, double lrlon1, double lrlat1, double ullon2, double ullat2, double lrlon2, double lrlat2) {
+        double lllon1 = ullon1;
+        double lllat1 = lrlat1;
+        double urlon1 = lrlon1;
+        double urlat1 = ullat1;
+        double lllon2 = ullon2;
+        double lllat2 = lrlat2;
+        double urlon2 = lrlon2;
+        double urlat2 = ullat2;
+        boolean b0 = isIn(ullon1, ullat1, lrlon1, lrlat1, ullon2, ullat2);
+        boolean b1 = isIn(ullon1, ullat1, lrlon1, lrlat1, urlon2, urlat2);
+        boolean b2 = isIn(ullon1, ullat1, lrlon1, lrlat1, lllon2, lllat2);
+        boolean b3 = isIn(ullon1, ullat1, lrlon1, lrlat1, lrlon2, lrlat2);
+        boolean b4 = isIn(ullon2, ullat2, lrlon2, lrlat2, ullon1, ullat1);
+        boolean b5 = isIn(ullon2, ullat2, lrlon2, lrlat2, urlon1, urlat1);
+        boolean b6 = isIn(ullon2, ullat2, lrlon2, lrlat2, lllon1, lllat1);
+        boolean b7 = isIn(ullon2, ullat2, lrlon2, lrlat2, lrlon1, lrlat1);
+        if (!b0 && !b1 && !b2 && !b3 && !b4 && !b5 && !b6 && !b7) {
+            return false;
+        }
+        return true;
+
+    }
+
+    private boolean isIn(double ullon, double ullat, double lrlon, double lrlat, double lon, double lat) {
+        if (lon >= lrlon) {
+            return false;
+        }
+        if (lon <= ullon) {
+            return false;
+        }
+        if (lat >= ullat) {
+            return false;
+        }
+        if (lat <= lrlat) {
+            return false;
+        }
+        return true;
     }
 
     @Override
