@@ -39,7 +39,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
                 spots.add(p);
             }
             if(n.name() != null) {
-                String CN = n.name().replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+                String CN = cleanString(n.name());
                 if (!cleanName2fullNames.containsKey(CN)) {
                     cleanNames.add(CN);
                     List<String> s = new LinkedList<>();
@@ -79,7 +79,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      */
     public List<String> getLocationsByPrefix(String prefix) {
         List<String> l = new LinkedList<>();
-        List<String> CNs = cleanNames.keysWithPrefix(prefix.replaceAll("[^a-zA-Z0-9]", "").toLowerCase());
+        List<String> CNs = cleanNames.keysWithPrefix(cleanString(prefix));
         for(String CN : CNs) {
             for(String FN : cleanName2fullNames.get(CN)) {
                 l.add(FN);
@@ -103,10 +103,10 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      */
     public List<Map<String, Object>> getLocations(String locationName) {
         List<Map<String, Object>> l = new ArrayList<>();
-        if (!cleanName2Nodes.containsKey(locationName.replaceAll("[^a-zA-Z0-9]", "").toLowerCase())) {
+        if (!cleanName2Nodes.containsKey(cleanString(locationName))) {
             return l;
         }
-        List<Node> nodes= cleanName2Nodes.get(locationName.replaceAll("[^a-zA-Z0-9]", "").toLowerCase());
+        List<Node> nodes= cleanName2Nodes.get(cleanString(locationName));
         for(Node n : nodes) {
             Map<String, Object> m = new HashMap<>();
             m.put("lat", n.lat());
