@@ -79,7 +79,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      */
     public List<String> getLocationsByPrefix(String prefix) {
         List<String> l = new LinkedList<>();
-        List<String> CNs = cleanNames.keysWithPrefix(prefix);
+        List<String> CNs = cleanNames.keysWithPrefix(prefix.toLowerCase().replaceAll("\\s+",""));
         for(String CN : CNs) {
             for(String FN : cleanName2fullNames.get(CN)) {
                 l.add(FN);
