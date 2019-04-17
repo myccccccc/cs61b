@@ -19,8 +19,8 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
 
     private List<Point> spots;
     private Map<Point, Node> point2node;
-    private Map<String, Set<String>> cleanName2fullNames;
-    private Map<String, Set<Node>> cleanName2Nodes;
+    private Map<String, List<String>> cleanName2fullNames;
+    private Map<String, List<Node>> cleanName2Nodes;
     private MyTrieSet cleanNames;
 
     public AugmentedStreetMapGraph(String dbPath) {
@@ -42,9 +42,9 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
                 String CN = n.name().toLowerCase().replaceAll("\\s+","");
                 if (!cleanName2fullNames.containsKey(CN)) {
                     cleanNames.add(CN);
-                    Set<String> s = new HashSet<>();
+                    List<String> s = new LinkedList<>();
                     cleanName2fullNames.put(CN, s);
-                    Set<Node> s1 = new HashSet<>();
+                    List<Node> s1 = new LinkedList<>();
                     cleanName2Nodes.put(CN, s1);
                 }
                 cleanName2fullNames.get(CN).add(n.name());
@@ -102,7 +102,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * "id" -> Number, The id of the node. <br>
      */
     public List<Map<String, Object>> getLocations(String locationName) {
-        Set<Node> nodes= cleanName2Nodes.get(locationName.toLowerCase().replaceAll("\\s+",""));
+        List<Node> nodes= cleanName2Nodes.get(locationName.toLowerCase().replaceAll("\\s+",""));
         List<Map<String, Object>> l = new ArrayList<>();
         for(Node n : nodes) {
             Map<String, Object> m = new HashMap<>();
