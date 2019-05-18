@@ -25,14 +25,15 @@ public class MemoryGame {
         }
 
         int seed = Integer.parseInt(args[0]);
-        MemoryGame game = new MemoryGame(40, 40);
+        MemoryGame game = new MemoryGame(40, 40, seed);
         game.startGame();
     }
 
-    public MemoryGame(int width, int height) {
+    public MemoryGame(int width, int height, int seed) {
         /* Sets up StdDraw so that it has a width by height grid of 16 by 16 squares as its canvas
          * Also sets up the scale so the top left is (0,0) and the bottom right is (width, height)
          */
+        this.rand = new Random(seed);
         this.width = width;
         this.height = height;
         StdDraw.setCanvasSize(this.width * 16, this.height * 16);
@@ -42,33 +43,61 @@ public class MemoryGame {
         StdDraw.setYscale(0, this.height);
         StdDraw.clear(Color.BLACK);
         StdDraw.enableDoubleBuffering();
-
-        //TODO: Initialize random number generator
     }
 
     public String generateRandomString(int n) {
-        //TODO: Generate random string of letters of length n
-        return null;
+        String s = "";
+        for (int i = 0; i < n; i++) {
+            s += MemoryGame.CHARACTERS[this.rand.nextInt(MemoryGame.CHARACTERS.length)];
+        }
+        return s;
     }
 
     public void drawFrame(String s) {
-        //TODO: Take the string and display it in the center of the screen
         //TODO: If game is not over, display relevant game information at the top of the screen
+        Font font = new Font("Monaco", Font.BOLD, 30);
+        StdDraw.setFont(font);
+        StdDraw.setPenColor(StdDraw.WHITE);
+        StdDraw.clear(Color.BLACK);
+        StdDraw.text(this.width / 2, this.height / 2, s);
+        StdDraw.show();
     }
 
     public void flashSequence(String letters) {
-        //TODO: Display each character in letters, making sure to blank the screen between letters
+        StdDraw.clear(Color.BLACK);
+        for (int i = 0; i < letters.length(); i++) {
+            String c = Character.toString(letters.charAt(i));
+            drawFrame(c);
+            StdDraw.pause(1000);
+            StdDraw.clear(Color.BLACK);
+            StdDraw.pause(500);
+        }
     }
 
     public String solicitNCharsInput(int n) {
-        //TODO: Read n letters of player input
-        return null;
+        StdDraw.clear(Color.BLACK);
+        String s = "";
+        while (s.length() < n) {
+            while (!StdDraw.hasNextKeyTyped());
+            char c = StdDraw.nextKeyTyped();
+            s += Character.toString(c);
+            drawFrame(s);
+        }
+        return s;
     }
 
     public void startGame() {
         //TODO: Set any relevant variables before the game starts
 
         //TODO: Establish Engine loop
+        for (int i = 1; i < 10; i++) {
+            drawFrame("Round " + i);
+            String s = generateRandomString(i);
+            flashSequence(s);
+            if (solicitNCharsInput(i).equals(s)) {
+                break;
+            }
+        }
     }
 
 }
